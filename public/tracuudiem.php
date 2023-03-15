@@ -1,3 +1,13 @@
+<?php
+require_once '../bootstrap.php';
+use CT446\qld\QLdiem;
+session_start();
+
+$qldiem = new QLDiem($PDO);
+$qld = $qldiem->gettenhs();
+$qld = $qldiem->diemtin();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +20,7 @@
     <form action="">
         <table>
             <tbody>
-                <tr>Tra cứu điểm học sinh <b>Đoàn Minh Quang</b></tr>
+                <tr>Tra cứu điểm học sinh <b><?php echo $_SESSION['hoten'] ?></b></tr>
                 <tr>
                     <td>Chọn năm học</td>
                     <td>
@@ -30,7 +40,7 @@
     </form>
     <br>
     <div>
-        Kết quả học tập của <b>Đoàn Minh Quang</b> trong học kỳ 1
+        Kết quả học tập của <b><?php echo $_SESSION['hoten'] ?></b> trong học kỳ 1
     </div>
     <table border="1">
         <tbody>
@@ -117,15 +127,17 @@
             </tr>
             <tr>
                 <td>Tin học</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <?php foreach($qld as $qldiem): ?>
+                <td><?=htmlspecialchars($qldiem->m)?></td>
+                <td><?=htmlspecialchars($qldiem->p15_1)?></td>
+                <td><?=htmlspecialchars($qldiem->p15_2)?></td>
+                <td><?=htmlspecialchars($qldiem->p15_3)?></td>
+                <td><?=htmlspecialchars($qldiem->t1_1)?></td>
+                <td><?=htmlspecialchars($qldiem->t1_2)?></td>
+                <td><?=htmlspecialchars($qldiem->t1_3)?></td>
+                <td><?=htmlspecialchars($qldiem->hk)?></td>
+                <td><?=htmlspecialchars($qldiem->tbhk)?></td>
+                <?php endforeach ?>
             </tr>
             <tr>
                 <td>Công nghệ</td>

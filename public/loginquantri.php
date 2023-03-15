@@ -3,7 +3,7 @@ require_once '../bootstrap.php';
 use CT446\qld\QLdiem;
 $qldiem = new QLDiem($PDO);
 session_start();
-$qld = $qldiem->login();
+$qld = $qldiem->loginquantri();
 ?>
 
 <!DOCTYPE html>
@@ -15,7 +15,7 @@ $qld = $qldiem->login();
 	<title>login</title>
 </head>
 <body>
-	<form action="index.php" method="post">
+	<form action="loginquantri.php" method="post">
 		<table>
 			<tbody>
 				<tr>
@@ -29,17 +29,6 @@ $qld = $qldiem->login();
 				<tr>
 					<td>Password:</td>
 					<td><input type="password" name="matkhau"></td>
-				</tr>
-				<tr>
-					<td>Dành cho:</td>
-					<td>
-						<select name="quyen" id="">
-							<option value="tkhs">Học sinh</option>
-							<option value="tkgv">Giáo viên</option>
-							<option value="">Quản trị</option>
-
-						</select>
-					</td>
 				</tr>
 				<tr>
 					<td></td>
