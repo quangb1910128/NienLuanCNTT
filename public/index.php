@@ -36,8 +36,6 @@ $qld = $qldiem->login();
 						<select name="quyen" id="">
 							<option value="tkhs">Học sinh</option>
 							<option value="tkgv">Giáo viên</option>
-							<option value="">Quản trị</option>
-
 						</select>
 					</td>
 				</tr>

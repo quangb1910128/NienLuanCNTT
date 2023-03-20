@@ -15,6 +15,8 @@ class QLDiem
     private $mmon;
     public $mnamhoc = 2023;
     public $hocky = 1;
+    public $diemtbhk1 = NULL;
+    public $diemtbhk2 = NULL;
 	private $errors = [];
 
 	public function getmlop()
@@ -37,6 +39,10 @@ class QLDiem
 		return $this->mmon;
 	}
 
+    public function getmgd()
+	{
+		return $this->mgd;
+	}
 
 	public function __construct($pdo)
 	{
@@ -131,8 +137,10 @@ class QLDiem
 
     public function lopphutrach(){
         $qld = [];
-        $stmt = $this->db->prepare("SELECT tenlop, lh.mlop FROM giangday gd JOIN lophoc lh WHERE gd.mlop = lh.mlop AND msgv = '1';");
-        $stmt->execute();
+        $stmt = $this->db->prepare("SELECT tenlop, lh.mlop FROM giangday gd JOIN lophoc lh WHERE gd.mlop = lh.mlop AND msgv = :msgv;");
+        $stmt->execute(array(
+            'msgv'=> $_SESSION['msgv']
+        ));
         while ($row = $stmt->fetch()) {
             $qldiem = new QLDiem($this->db);
             $qldiem->fillFromDB($row);
@@ -206,8 +214,10 @@ class QLDiem
 
     
     public function mongd(){
-        $stmt = $this->db->prepare("SELECT tenmon, mmon FROM giangday gd JOIN monhoc mh WHERE gd.mmon = mh.mamon AND msgv='1'");
-        $stmt->execute();
+        $stmt = $this->db->prepare("SELECT tenmon, gd.mmon FROM giangday gd JOIN monhoc mh WHERE gd.mmon = mh.mmon AND msgv=:msgv");
+        $stmt->execute(array(
+            'msgv'=> $_SESSION['msgv']
+        ));
 
         while($row = $stmt->fetch()){
             $_SESSION['mmon'] = $row['mmon'] ;
@@ -328,25 +338,32 @@ class QLDiem
         
     }
 
-    public function diemtin(){
-        $stmt = $this->db->prepare("SELECT * FROM chitietdiem WHERE mdiem = (SELECT mdiem FROM diem WHERE mshs = :mshs AND mmon = 'tin' AND mnamhoc = :mnamhoc AND hocky = :hocky)");
+    public function hienthidiem1(){
+        $stmt = $this->db->prepare("SELECT mh.mmon,tenmon, M, 15p1,15p2,15p3,1t1,1t2,1t3,hk,tbhk FROM diem d JOIN chitietdiem ctd JOIN monhoc mh on d.mdiem=ctd.mdiem AND d.mmon = mh.mmon WHERE mshs = :mshs AND mnamhoc = :mnamhoc AND hocky = 1");
         $stmt->execute(array(
             'mshs' => $_SESSION['mshs'],
-            'mnamhoc' => $this->mnamhoc,
-            'hocky' => $this->hocky
+            'mnamhoc' => $this->mnamhoc
         ));
-
-        while ($row = $stmt->fetch()) {
-        $qldiem = new QLDiem($this->db);
-        $qldiem->fillFromDB4($row);
-        $qld[] = $qldiem;
-        return $qld;
-        }
+        $count = $stmt->rowCount();
+        if($count>0){
+            $dem=0;
+            $tong=0;
+            while ($row = $stmt->fetch()) {
+                $qldiem = new QLDiem($this->db);
+                $qldiem->fillFromDB4($row);
+                $qld[] = $qldiem;
+                $dem++;
+                $tong += $row['tbhk'];
+            }
+            $this->diemtbhk1= $tong/$dem;
+            return $qld;
+        }else return 1;
     }
 
     protected function fillFromDB4(array $row){
         [   
-            'mdiem' => $this->mdiem,
+            'tenmon'=> $this->tenmon,
+            'mmon' => $this->mmon,
             'M' => $this->m,
             '15p1' => $this->p15_1,
             '15p2' => $this->p15_2,
@@ -359,6 +376,98 @@ class QLDiem
 
         ] = $row;
         return $this;
+    }
+
+    public function hienthidiem2(){
+        $stmt = $this->db->prepare("SELECT mh.mmon,tenmon, M, 15p1,15p2,15p3,1t1,1t2,1t3,hk,tbhk FROM diem d JOIN chitietdiem ctd JOIN monhoc mh on d.mdiem=ctd.mdiem AND d.mmon = mh.mmon WHERE mshs = :mshs AND mnamhoc = :mnamhoc AND hocky = 2");
+        $stmt->execute(array(
+            'mshs' => $_SESSION['mshs'],
+            'mnamhoc' => $this->mnamhoc
+        ));
+        $count = $stmt->rowCount();
+        if($count>0){
+            $dem=0;
+            $tong=0;
+            while ($row = $stmt->fetch()) {
+                $qldiem = new QLDiem($this->db);
+                $qldiem->fillFromDB9($row);
+                $qld[] = $qldiem;
+                $dem++;
+                $tong += $row['tbhk'];
+            }
+            $this->diemtbhk2= $tong/$dem;
+            return $qld;
+        }
+        else{
+            return 1;
+        }
+    }
+
+    protected function fillFromDB9(array $row){
+        [   
+            'tenmon'=> $this->tenmon,
+            'mmon' => $this->mmon,
+            'M' => $this->m,
+            '15p1' => $this->p15_1,
+            '15p2' => $this->p15_2,
+            '15p3' => $this->p15_3,
+            '1t1' => $this->t1_1,
+            '1t2' => $this->t1_2,
+            '1t3' => $this->t1_3,
+            'hk' => $this->hk,
+            'tbhk' => $this->tbhk
+
+        ] = $row;
+        return $this;
+    }
+
+    public function taomdiem(){
+        $stmt = $this->db->prepare("SELECT * FROM diem WHERE mshs= :mshs AND mmon=:mmon AND mnamhoc=:mnamhoc AND hocky=:hocky AND msgv=:msgv");
+        $stmt->execute(array(
+            'mshs'=>$_REQUEST['mshs'],
+            'mmon'=> $_SESSION['mmon'],
+            'mnamhoc'=> $this->mnamhoc,
+            'hocky'=> $this->hocky,
+            'msgv'=> $_SESSION['msgv']
+        ));
+        $count = $stmt->rowCount();
+        if($count==0){
+            $stmt = $this->db->prepare("INSERT INTO diem (mshs, mmon, mnamhoc, hocky, msgv) VALUES (:mshs, :mmon, :mnamhoc, :hocky, :msgv)");
+            $stmt->execute(array(
+                'mshs'=>$_REQUEST['mshs'],
+                'mmon'=> $_SESSION['mmon'],
+                'mnamhoc'=> $this->mnamhoc,
+                'hocky'=> $this->hocky,
+                'msgv'=> $_SESSION['msgv']
+            ));
+
+
+
+            $stmt = $this->db->prepare("SELECT mdiem FROM diem WHERE mshs = :mshs AND msgv = :msgv AND mmon = :mmon AND mnamhoc = :mnamhoc AND hocky = :hocky");
+            $stmt->execute(array(
+                'mshs'=>$_REQUEST['mshs'],
+                'mmon'=> $_SESSION['mmon'],
+                'mnamhoc'=> $this->mnamhoc,
+                'hocky'=> $this->hocky,
+                'msgv'=> $_SESSION['msgv']
+            ));
+            $count = $stmt->rowCount();
+            while ($row = $stmt->fetch()) {
+                $md['mdiem'] = $row['mdiem'];
+            }
+            echo $md['mdiem'];
+            $count = $stmt->rowCount();
+            if($count>0){
+                $stmt = $this->db->prepare("INSERT INTO chitietdiem (mdiem) VALUES (:mdiem)");
+                $stmt->execute(
+                    array(
+                        'mdiem'=> $md['mdiem']
+                    )
+                );
+            }
+        }
+
+        
     }
     // Trang quản trị
     public function loginquantri(){
@@ -460,4 +569,116 @@ class QLDiem
         header('location: xoagiaovien.php');
     }
 
+    public function laychuyenmon(){
+        $stmt = $this->db->prepare("SELECT chuyenmon FROM giaovien WHERE msgv = :msgv");
+        $stmt->execute(array(
+            'msgv'=>$_SESSION['msgv']
+        ));
+        $row = $stmt->fetch();
+        $_SESSION['mmon']= $row['chuyenmon'];
+    }
+
+    public function dslophocchuaphanconggd(){
+        if(isset($_SESSION["quantri"])){
+            $qld = [];
+            $stmt = $this->db->prepare("SELECT mlop, tenlop FROM lophoc WHERE mlop = ANY (SELECT mlop FROM lophoc EXCEPT (SELECT mlop FROM giangday WHERE mmon = :mmon))");
+            $stmt->execute(array(
+                'mmon'=> $_SESSION['mmon']
+            ));
+            while ($row = $stmt->fetch()) {
+                $qldiem = new QLDiem($this->db);
+                $qldiem->fillFromDB6($row);
+                $qld[] = $qldiem;
+                }
+            return $qld;
+        }
+        else{
+            header('location: loginquantri.php');
+        }
+    }
+
+    protected function fillFromDB6(array $row){
+        [
+            'mlop'=> $this->mlop,
+            'tenlop' => $this->tenlop
+
+        ] = $row;
+        return $this;
+    }
+
+    public function dslophocdaphanconggd(){
+        if(isset($_SESSION["quantri"])){
+            $qld = [];
+            $stmt = $this->db->prepare("SELECT mgd, gd.mlop,tenlop,gv.hoten FROM giangday gd JOIN lophoc lh JOIN giaovien gv ON gd.mlop = lh.mlop AND gd.msgv= gv.msgv WHERE mmon = :mmon");
+            $stmt->execute(array(
+                'mmon'=> $_SESSION['mmon']
+            ));
+            while ($row = $stmt->fetch()) {
+                $qldiem = new QLDiem($this->db);
+                $qldiem->fillFromDB7($row);
+                $qld[] = $qldiem;
+                }
+            return $qld;
+        }
+        else{
+            header('location: loginquantri.php');
+        }
+    }
+
+    protected function fillFromDB7(array $row){
+        [
+            'mlop'=> $this->mlop,
+            'tenlop' => $this->tenlop,
+            'hoten' => $this->hoten,
+            'mgd' => $this->mgd
+
+        ] = $row;
+        return $this;
+    }
+
+    public function phanconggd(){
+        $stmt = $this->db->prepare("INSERT INTO giangday (msgv, mlop, mnam, mmon) VALUES (:msgv, :mlop, :mnam, :mmon)");
+        $stmt->execute(array(
+            'msgv'=>$_SESSION['msgv'],
+            'mlop'=>$_REQUEST['mlop'],
+            'mnam'=>$this->mnamhoc,
+            'mmon'=>$_SESSION['mmon']
+        ));
+        header('location: phanconggd.php?msgv=' . $_SESSION['msgv']);
+    }
+
+    public function huyphanconggd(){
+        $stmt = $this->db->prepare("DELETE FROM giangday WHERE giangday.mgd = :mgd");
+        $stmt->execute(array(
+            'mgd'=>$_REQUEST['mgd']
+        ));
+        header('location: phanconggd.php');
+    }
+
+    public function dslophocchuaphancongcn(){
+        if(isset($_SESSION["quantri"])){
+            $qld = [];
+            $stmt = $this->db->prepare("SELECT lophoc.mlop, lophoc.tenlop, COUNT(chitietlop.mlop) AS siso FROM chitietlop JOIN lophoc ON  lophoc.mlop = chitietlop.mlop  WHERE chitietlop.mlop= any (SELECT mlop FROM chitietlop GROUP BY chitietlop.mlop EXCEPT (SELECT mlop FROM chunhiem))GROUP BY chitietlop.mlop");
+            $stmt->execute();
+            while ($row = $stmt->fetch()) {
+                $qldiem = new QLDiem($this->db);
+                $qldiem->fillFromDB8($row);
+                $qld[] = $qldiem;
+                }
+            return $qld;
+        }
+        else{
+            header('location: loginquantri.php');
+        }
+    }
+
+    protected function fillFromDB8(array $row){
+        [
+            'mlop'=> $this->mlop,
+            'tenlop' => $this->tenlop,
+            'siso' => $this->siso
+
+        ] = $row;
+        return $this;
+    }
 }

@@ -2,6 +2,7 @@
 require_once '../bootstrap.php';
 use CT446\qld\QLdiem;
 session_start();
+$_SESSION['msgv']=NULL;
 $qldiem = new QLDiem($PDO);
 $qld = $qldiem->dsgv();
 
@@ -16,6 +17,11 @@ $qld = $qldiem->dsgv();
     <title>Quản lý giáo viên</title>
 </head>
 <body>
+    <a href="<?=BASE_URL_PATH . 'qlhocsinh.php'?>">Quản lý học sinh</a>
+    <br>
+    <a href="<?=BASE_URL_PATH . 'qlgiaovien.php'?>">Quản lý giáo viên</a>
+    <br>
+    <a href="<?=BASE_URL_PATH . 'qllophoc.php'?>">Quản lý lớp học</a>
     <div>
         <a href="<?=BASE_URL_PATH . 'themgiaovien.php'?>">Thêm giáo viên</a>
         <a href="<?=BASE_URL_PATH . 'xoagiaovien.php'?>">Xóa giáo viên</a>

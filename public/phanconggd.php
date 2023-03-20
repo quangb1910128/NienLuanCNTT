@@ -2,9 +2,13 @@
 require_once '../bootstrap.php';
 use CT446\qld\QLdiem;
 session_start();
-$_SESSION['msgv']=NULL;
+if(!isset($_SESSION['msgv']))
+$_SESSION['msgv'] = $_REQUEST['msgv']; 
+
 $qldiem = new QLDiem($PDO);
-$qld = $qldiem->dslophocchuaphancongcn();
+$qld = $qldiem->laychuyenmon();
+$qld = $qldiem->dslophocchuaphanconggd();
+$qld2 = $qldiem->dslophocdaphanconggd();
 
 ?>
 
@@ -16,42 +20,43 @@ $qld = $qldiem->dslophocchuaphancongcn();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<body >
-    <h3>Danh sách lớp chưa có giáo viên chủ nhiệm</h3>
+<body>
+    <a href="<?=BASE_URL_PATH . 'qlhocsinh.php'?>">Quản lý học sinh</a>
+    <br>
+    <a href="<?=BASE_URL_PATH . 'qlgiaovien.php'?>">Quản lý giáo viên</a>
+    <br>
+    <a href="<?=BASE_URL_PATH . 'qllophoc.php'?>">Quản lý lớp học</a>
     <table border="1">
         <thead>
             <tr>
-                <th>Tên lớp</th>
-                <th>Sỉ số</th>
+                <th>Lớp</th>
                 <th>Acction</th>
             </tr>
         </thead>
-        <tbody>
         <?php foreach($qld as $qldiem): ?>
+        <tbody>
             <tr>
                 <td><?=htmlspecialchars($qldiem->tenlop)?></td>
-                <td><?=htmlspecialchars($qldiem->siso)?></td>
-                <td><a href="">Chọn chủ nhiệm</a></td>
+                <td><a href="<?=BASE_URL_PATH . 'phanconggd2.php?mlop=' . $qldiem->getmlop()?>">Chọn</a></td>
             </tr>
         <?php endforeach ?>
         </tbody>
     </table>
 
-    <h3>Danh sách lớp đã có giáo viên chủ nhiệm</h3>
     <table border="1">
         <thead>
             <tr>
-                <th>Tên lớp</th>
-                <th>Sỉ số</th>
+                <th>Lớp</th>
+                <th>Giáo viên giảng dạy</th>
                 <th>Acction</th>
             </tr>
         </thead>
+        <?php foreach($qld2 as $qldiem): ?>
         <tbody>
-        <?php foreach($qld as $qldiem): ?>
             <tr>
                 <td><?=htmlspecialchars($qldiem->tenlop)?></td>
-                <td><?=htmlspecialchars($qldiem->siso)?></td>
-                <td><a href="">Chọn chủ nhiệm</a></td>
+                <td><?=htmlspecialchars($qldiem->hoten)?></td>
+                <td><a href="<?=BASE_URL_PATH . 'huyphancong.php?mgd=' . $qldiem->getmgd()?>">Xóa</a></td>
             </tr>
         <?php endforeach ?>
         </tbody>

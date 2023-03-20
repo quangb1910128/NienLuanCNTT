@@ -3,6 +3,7 @@ require_once '../bootstrap.php';
 use CT446\qld\QLdiem;
 session_start();
 $qldiem = new QLDiem($PDO);
+$qld = $qldiem->taomdiem();
 $qld = $qldiem->diemcanhan();
 $qld2 = $qldiem->luudiem2();
 $qld = $qldiem->diemcanhan();

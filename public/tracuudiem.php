@@ -5,7 +5,8 @@ session_start();
 
 $qldiem = new QLDiem($PDO);
 $qld = $qldiem->gettenhs();
-$qld = $qldiem->diemtin();
+$qld1 = $qldiem->hienthidiem1();
+$qld2 = $qldiem->hienthidiem2();
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +47,7 @@ $qld = $qldiem->diemtin();
         <tbody>
             <tr>
                 <td>Điểm TB</td>
-                <td  width="200"></td>
+                <td  width="200"><?=htmlspecialchars($qldiem->diemtbhk1)?></td>
             </tr>
              <tr>
                 <td>Xếp hạng</td>
@@ -68,66 +69,20 @@ $qld = $qldiem->diemtin();
         Bảng điểm các môn học kỳ 1
     </div>
     <table border="1" width="500">
-        <tbody>
+        <thead>
             <tr>
                 <th>Môn học</th>
-                <th>Điểm miệng</th>
-                <th colspan="3">Điểm 15p</th>
-                <th colspan="3">Điểm 1 tiết</th>
-                <th>Học kỳ</th>
+                <th>Miệng</th>
+                <th colspan="3">15 phút</th>
+                <th colspan="3">1 tiết</th>
+                <th>Học Kỳ</th>
                 <th>TBM</th>
             </tr>
+        </thead>
+        <tbody>
+        <?php if($qld1!=1) foreach($qld1 as $qldiem): ?>
             <tr>
-                <td>Toán học</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Vật lý</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Hóa học</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Sinh học</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Tin học</td>
-                <?php foreach($qld as $qldiem): ?>
+                <td><?=htmlspecialchars($qldiem->tenmon)?></td>
                 <td><?=htmlspecialchars($qldiem->m)?></td>
                 <td><?=htmlspecialchars($qldiem->p15_1)?></td>
                 <td><?=htmlspecialchars($qldiem->p15_2)?></td>
@@ -137,105 +92,8 @@ $qld = $qldiem->diemtin();
                 <td><?=htmlspecialchars($qldiem->t1_3)?></td>
                 <td><?=htmlspecialchars($qldiem->hk)?></td>
                 <td><?=htmlspecialchars($qldiem->tbhk)?></td>
-                <?php endforeach ?>
             </tr>
-            <tr>
-                <td>Công nghệ</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Ngữ văn</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Lịch sử</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Địa lý</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Ngoại ngữ</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>GDCD</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Thể dục</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>GDQP</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-
+        <?php endforeach ?>
         </tbody>
     </table>
 
@@ -269,172 +127,32 @@ $qld = $qldiem->diemtin();
         Bảng điểm các môn học kỳ 2
     </div>
     <table border="1" width="500">
-        <tbody>
+        <thead>
             <tr>
                 <th>Môn học</th>
-                <th>Điểm miệng</th>
-                <th colspan="3">Điểm 15p</th>
-                <th colspan="3">Điểm 1 tiết</th>
-                <th>Học kỳ</th>
+                <th>Miệng</th>
+                <th colspan="3">15 phút</th>
+                <th colspan="3">1 tiết</th>
+                <th>Học Kỳ</th>
                 <th>TBM</th>
             </tr>
+        </thead>
+        <tbody>
+        
+        <?php if($qld2!=1)foreach($qld2 as $qldiem): ?>
             <tr>
-                <td>Toán học</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td><?=htmlspecialchars($qldiem->tenmon)?></td>
+                <td><?=htmlspecialchars($qldiem->m)?></td>
+                <td><?=htmlspecialchars($qldiem->p15_1)?></td>
+                <td><?=htmlspecialchars($qldiem->p15_2)?></td>
+                <td><?=htmlspecialchars($qldiem->p15_3)?></td>
+                <td><?=htmlspecialchars($qldiem->t1_1)?></td>
+                <td><?=htmlspecialchars($qldiem->t1_2)?></td>
+                <td><?=htmlspecialchars($qldiem->t1_3)?></td>
+                <td><?=htmlspecialchars($qldiem->hk)?></td>
+                <td><?=htmlspecialchars($qldiem->tbhk)?></td>
             </tr>
-            <tr>
-                <td>Vật lý</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Hóa học</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Sinh học</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Tin học</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Công nghệ</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Ngữ văn</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Lịch sử</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Địa lý</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Ngoại ngữ</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>GDCD</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Thể dục</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>GDQP</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-
+        <?php endforeach ?>
         </tbody>
     </table>
     <br>
@@ -445,7 +163,7 @@ $qld = $qldiem->diemtin();
         <tbody>
             <tr>
                 <td>Điểm TB</td>
-                <td  width="200"></td>
+                <td  width="200"><?=htmlspecialchars($qldiem->diemtbhk2)?></td>
             </tr>
              <tr>
                 <td>Xếp hạng</td>
