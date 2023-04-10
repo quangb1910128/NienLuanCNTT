@@ -1,10 +1,10 @@
 <?php
 require_once '../bootstrap.php';
+require_once('../Classes/PHPExcel.php');
 use CT446\qld\QLdiem;
 session_start();
 $qldiem = new QLDiem($PDO);
 $qld = $qldiem->dslop();
-
 ?>
 
 <!DOCTYPE html>
@@ -14,21 +14,36 @@ $qld = $qldiem->dslop();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Danh Sách Lớp</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href="<?= BASE_URL_PATH . "css/sticky-footer.css" ?>" rel=" stylesheet">
+	<link href="<?= BASE_URL_PATH . "css/font-awesome.min.css" ?>" rel=" stylesheet">
+	<link href="<?= BASE_URL_PATH . "css/animate.css" ?>" rel=" stylesheet">
+    <link href="<?= BASE_URL_PATH . "css/style.css" ?>" rel=" stylesheet">
+    
+	<link href="//cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div>
-        <a href="lopphutrach.php">Lớp phụ trách</a>
-        <a href="lopchunhiem.php">Lớp chủ nhiệm</a>
-    </div>
-    <div>
+    <header>
+        <?php include('../partials/navbar.php') ?>
+    </header>
+    <main class="container">
         <h3>Môn học: <?php echo $_SESSION['tenmon'] ?></h3>
-        <a href="<?=BASE_URL_PATH . 'nhapdiemlop.php?mlop=' . $_REQUEST['mlop']?>">
-            Nhập điểm cho lớp
-        </a>
-        <a href="suadiem.php">Sửa điểm</a>
-        <br><br>    
-        <div>Danh sách lớp 10A1</div>
-        <table border="1">
+        <div class="pd">
+            <ul class="nav nav-pills navbar-right">
+                <li class="active"><a href="<?=BASE_URL_PATH . 'dslop.php?mlop=' . $_REQUEST['mlop']?>">Danh sách lớp</a></li>
+                <li><a href="<?=BASE_URL_PATH . 'dsdiem.php?mlop=' . $_REQUEST['mlop']?>">Danh sách điểm</a></li>
+            </ul>
+        </div>
+        <br>
+        <h2 class="section-heading text-center wow fadeIn" data-wow-duration="1s">Danh sách lớp <?php print_r ($qldiem->gettenlop($_REQUEST['mlop'])) ?></h2>
+        <table id="table"  class="table table-hover">
             <thead>
                 <tr>
                     <th>MSHS</th>
@@ -38,19 +53,35 @@ $qld = $qldiem->dslop();
                     <th>Action</th>
                 </tr>
             </thead>
-            <?php foreach($qld as $qldiem): ?>
+            
             <tbody>
-                
+                <?php foreach($qld as $qldiem): if($qldiem->gioitinh ==1) $gt = 'Nam'; else $gt = 'Nữ'?>
                 <tr>
                     <td><?=htmlspecialchars($qldiem->getmshs())?></td>
                     <td><?=htmlspecialchars($qldiem->hoten)?></td>
                     <td><?=htmlspecialchars($qldiem->ngaysinh)?></td>
-                    <td><?=htmlspecialchars($qldiem->gioitinh)?></td>
-                    <td><a href="<?=BASE_URL_PATH . 'nhapdiem.php?mshs=' . $qldiem->getmshs()?>">Nhập điểm</a></td>
+                    <td><?=htmlspecialchars($gt)?></td>
+                    <td><a class="btn btn-xs btn-warning" href="<?=BASE_URL_PATH . 'nhapdiem.php?mshs=' . $qldiem->getmshs()?>">Sửa điểm</a></td>
                 </tr>
+                <?php endforeach ?>
             </tbody>
-            <?php endforeach ?>
+            
         </table>
-    </div>
+    </main>
+    <?php include('../partials/footer.php') ?>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+	<script src="//cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+	<script src="<?= BASE_URL_PATH . "js/wow.min.js" ?>"></script>
+	<script>
+		$(document).ready(function() {
+			new WOW().init();
+			$('#table').DataTable();
+		});
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+	</script>
 </body>
 </html>

@@ -8,6 +8,7 @@ $qld = $qldiem->diemcanhan();
 $qld2 = $qldiem->luudiem2();
 $qld = $qldiem->diemcanhan();
 
+
 $_SESSION['mshs'] = $_REQUEST['mshs'];
 ?>
 
@@ -17,63 +18,46 @@ $_SESSION['mshs'] = $_REQUEST['mshs'];
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh Sách Lớp</title>
+    <title>Nhập điểm</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href="<?= BASE_URL_PATH . "css/sticky-footer.css" ?>" rel=" stylesheet">
+	<link href="<?= BASE_URL_PATH . "css/font-awesome.min.css" ?>" rel=" stylesheet">
+	<link href="<?= BASE_URL_PATH . "css/animate.css" ?>" rel=" stylesheet">
+    <link href="<?= BASE_URL_PATH . "css/style.css" ?>" rel=" stylesheet">
+    
+	<link href="//cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div>
-        <a href="lopphutrach.php">Lớp phụ trách</a>
-        <a href="lopchunhiem.php">Lớp chủ nhiệm</a>
-    </div>
-    <div>
+    <header>
+        <?php include('../partials/navbar.php') ?>
+    </header>
+    <main class="container">
         <h3>Môn học: <?php echo $_SESSION['tenmon'] ?></h3>
-        <h4>Học sinh: MSHS: <?php echo $_REQUEST['mshs'] ?></h4>
+        <h4>Học sinh: <?php echo $qldiem->gettenhs() ?></h4>
     
         <br>
         <div>Bảng điểm</div>
-        <!-- <table border="1">
-            <thead>
-                <tr>
-                    <th>Miệng</th>
-                    <th colspan=3>15 phút</th>
-                    <th colspan=3>1 tiết</th>
-                    <th>Học kỳ</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach($qld as $qldiem): ?>
-                <tr>
-                    <td><?=htmlspecialchars($qldiem->m)?></td>
-                
-                    <td><?=htmlspecialchars($qldiem->p15_1)?></td>
-                
-                    <td><?=htmlspecialchars($qldiem->p15_2)?></td>
-                
-                    <td><?=htmlspecialchars($qldiem->p15_3)?></td>
-                
-                    <td><?=htmlspecialchars($qldiem->t1_1)?></td>
-                
-                    <td><?=htmlspecialchars($qldiem->t1_2)?></td>
-                
-                    <td><?=htmlspecialchars($qldiem->t1_3)?></td>
-                
-                    <td><?=htmlspecialchars($qldiem->hk)?></td>
-                </tr>
-                <?php endforeach ?>
-            </tbody>
-        </table> -->
-        <form action="" method="post">
-            <table border="1">
+        <form class="" action="" method="post">
+            <table class="table table-bordered">
                 <thead>
-                    <tr>
+                    <tr class="bg-primary">
                         <th>Miệng</th>
-                        <th colspan=3>15 phút</th>
-                        <th colspan=3>1 tiết</th>
+                        <th class="text-center" colspan=3>15 phút</th>
+                        <th class="text-center" colspan=3>1 tiết</th>
                         <th>Học kỳ</th>
                         <th>TBHK</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <?php foreach($qld as $qldiem): ?>
                     <tr>
                         <td><input name="M" type="number" min="0" max="10" step=".05" value="<?=htmlspecialchars($qldiem->m)?>"></td>
                         <td><input name="15p1" type="number" min="0" max="10" step=".05" value="<?=htmlspecialchars($qldiem->p15_1)?>"></td>
@@ -85,10 +69,18 @@ $_SESSION['mshs'] = $_REQUEST['mshs'];
                         <td><input name="hk" type="number" min="0" max="10" step=".05" value="<?=htmlspecialchars($qldiem->hk)?>"></td>
                         <td><input name="tb" type="number" min="0" max="10" step=".01" disabled value="<?=htmlspecialchars($qldiem->tbhk)?>"></td>
                         <td><input type="submit" value="Lưu"></td>
+                        
                     </tr>
+                    <?php endforeach ?>
                 </tbody>
             </table>
         </form>
-    </div>
+    </main>
+    <?php include('../partials/footer.php') ?>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
 </body>
 </html>

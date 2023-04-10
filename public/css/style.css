@@ -1,0 +1,27 @@
+.pd{
+    padding-right: 16px;
+}
+/* Bordered form */
+body{
+    background-color: #e9ebee;
+}
+main{
+    margin-top: -10px;
+    margin-bottom:100px;
+    background: #fff;
+    box-shadow: 5px 5px 4px #888888;
+    min-height: 500px;
+}
+a:hover{
+    text-decoration: none;
+}
+.logo{
+    font-family: monospace;
+    text-shadow: 4px 4px 2px #3412c8;
+    font-size: 32px;
+    color: rgb(127, 131, 255);
+    padding-bottom: -20px;
+}
+.footer{
+    height: 100px;   
+}

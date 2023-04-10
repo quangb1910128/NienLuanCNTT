@@ -4,7 +4,7 @@ require_once __DIR__ . '/src/library.php';
 require_once __DIR__ . '/vendor/Psr4AutoloaderClass.php';
 $loader = new Psr4AutoloaderClass;
 $loader->register();
-// Các lớp có không gian tên bắt đầu với CT275\Labs nằm ở src
+// Các lớp có không gian tên bắt đầu với CT446\qld nằm ở src
 $loader->addNamespace('CT446\qld', __DIR__ .'/src');
 
 try {
